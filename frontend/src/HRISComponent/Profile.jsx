@@ -85,8 +85,7 @@ const Profile = () => {
 
     
   const selectFile = (event) => {
-  console.log(event.target.files[0])
-
+ 
   const reader = new FileReader()
 
         reader.onlaod = () => {

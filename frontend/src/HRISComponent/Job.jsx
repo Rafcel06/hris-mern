@@ -2,7 +2,7 @@ import React from 'react'
 
 const Job = () => {
   return (
-    <div>Job</div>
+    <div>Job is under development</div>
   )
 }
 

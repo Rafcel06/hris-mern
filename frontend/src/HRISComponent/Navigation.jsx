@@ -62,7 +62,6 @@ const Navigation = ({showBar}) => {
 
   const sBar = showBar.navBarVisible ?  true : false
 
-  console.log(routeConfig[3].children)
 
   return (
     <>

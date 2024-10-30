@@ -8,7 +8,6 @@ import { routeConfig } from "../Routing/routeConfig";
 
 const Subnavigation = () => {
 
-   console.log(routeConfig[3].children)
   return (
     <>
      {

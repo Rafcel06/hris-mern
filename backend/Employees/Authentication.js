@@ -5,10 +5,10 @@ const bcryptjs = require("bcryptjs");
 const router = express.Router();
 const jwt = require("jsonwebtoken");
 const auth = require("../Authorization/gaurd")
-const db = require('../User/Database')
+const db = require('../hris/Database')
 const { rateLimit }  = require('express-rate-limit')
 const path = require('path');
-const multer = require('multer')
+
 
 
 const currentDirectory = __dirname;
@@ -36,31 +36,34 @@ const limiter = rateLimit({
 
 
 router.post('/login', limiter, async (req, res) => {
-    const { email, password } = req.body;
+    const { Email, Password } = req.body;
+
   
-    if (!email || !password) {
-        return res.status(400).json({ message: 'Email and password are required' });
+    if (!Email || !Password) {
+        return res.status(400).json({ message: 'Email and Password are required' });
     }
   
     try {
   
-        const sql = `SELECT * FROM ${directoryName} WHERE email = ?`;
-        const results = await db.executeQuery(sql, [email]);
+        const sql = `SELECT * FROM ${directoryName} WHERE Email = ?`;
+        const results = await db.executeQuery(sql, [Email]);
   
         if (results.length === 0) {
-            return res.status(404).json({ message: 'No account found with this email' });
+            return res.status(404).json({ message: 'No account found with this Email' });
         }
   
         const user = results[0];
+    
 
-        bcryptjs.compare(password, user.password, (err, result) => {
+        bcryptjs.compare(Password, user.Password, (err, result) => {
+  
             if (err || !result) {
                 return res.status(401).json({ message: 'Password does not match' });
             }
   
-            const token = jwt.sign({ email: user.email }, process.env.AUTHENTICATED_SECRET_KEY, { expiresIn: '10hrs' });
+            const token = jwt.sign({ Email: user.Email }, process.env.AUTHENTICATED_SECRET_KEY, { expiresIn: '1hr' });
 
-            const { password, ...userProfile } = user;
+            const { Password, ...userProfile } = user;
             req.session.user = userProfile
 
             
@@ -82,18 +85,18 @@ router.post('/login', limiter, async (req, res) => {
 
 router.post('/register', auth, async (req, res) => {
 
-  const { firstName, middleName, lastName, phone, email, password } = req.body;
+  const { FirstName, MiddleName, LastName, Phone, Email, Password } = req.body;
 
-  if (!firstName || !lastName || !email || !password) {
+  if (!FirstName || !LastName || !Email || !Password) {
       return res.status(400).json({ error: 'All fields are required' });
   }
 
   try {
-      const hashedPassword =  await bcryptjs.hash(password, 10);
-      const sql = `INSERT INTO ${directoryName} (firstName, middleName, lastName, phone, email, password) VALUES (?, ?, ?, ?, ?, ?)`;
-      const result = await db.insertQuery(sql, [firstName, middleName, lastName, phone, email, hashedPassword]);
+      const hashedPassword =  await bcryptjs.hash(Password, 10);
+      const sql = `INSERT INTO ${directoryName} (FirstName, MiddleName, LastName, Phone, Email, Password) VALUES (?, ?, ?, ?, ?, ?)`;
+      const result = await db.insertQuery(sql, [FirstName, MiddleName, LastName, Phone, Email, hashedPassword]);
    
-      res.status(201).json({ id: result.id, firstName, middleName, lastName, phone, email });
+      res.status(201).json({ id: result.EmployeeID, FirstName, MiddleName, LastName, Phone, Email });
   } catch (error) {
       console.error('Error registering employee:', error);
       res.status(500).json({ error: 'Failed to register employee' });
@@ -103,7 +106,7 @@ router.post('/register', auth, async (req, res) => {
 
 router.put('/update-profile/:id', auth, async (req, res) => {
   const id = req.params.id;
-    const { firstName, middleName, lastName, phone, email,password,emergencyPhoneNumber,currentAddress,permanentAddress } = req.body;
+    const { FirstName, MiddleName, LastName, Phone, Email,Password,EmergencyPhoneNumber,CurrentAddress,PermanentAddress } = req.body;
 
     if (!id) {
         return res.status(400).json({ message: 'User ID is required' });
@@ -111,59 +114,59 @@ router.put('/update-profile/:id', auth, async (req, res) => {
 
     try {
 
-        const hashedPassword =  await bcryptjs.hash(password, 10);
+        const hashedPassword =  await bcryptjs.hash(Password, 10);
         let sql = `UPDATE ${directoryName} SET`;
         const values = [];
 
-        if (firstName) {
-            sql += ' firstName = ?,';
-            values.push(firstName);
+        if (FirstName) {
+            sql += ' FirstName = ?,';
+            values.push(FirstName);
         }
 
-        if (middleName) {
-            sql += ' middleName = ?,';
-            values.push(middleName);
+        if (MiddleName) {
+            sql += ' MiddleName = ?,';
+            values.push(MiddleName);
         }
 
-        if (lastName) {
-            sql += ' lastName = ?,';
-            values.push(lastName);
+        if (LastName) {
+            sql += ' LastName = ?,';
+            values.push(LastName);
         }
 
-        if (phone) {
-            sql += ' phone = ?,';
-            values.push(phone);
+        if (Phone) {
+            sql += ' Phone = ?,';
+            values.push(Phone);
         }
 
-        if (email) {
-            sql += ' email = ?,';
-            values.push(email);
+        if (Email) {
+            sql += ' Email = ?,';
+            values.push(Email);
         }
 
         if(hashedPassword) {
-           sql += 'password = ?,';
+           sql += 'Password = ?,';
            values.push(hashedPassword);
         }
 
-        if (emergencyPhoneNumber) {
-            sql += ' emergencyPhoneNumber = ?,';
+        if (EmergencyPhoneNumber) {
+            sql += ' EmergencyPhoneNumber = ?,';
             values.push(emergencyPhoneNumber);
         }
 
-        if (currentAddress) {
-            sql += ' currentAddress = ?,';
+        if (CurrentAddress) {
+            sql += ' CurrentAddress = ?,';
             values.push(currentAddress);
         }
 
-        if (permanentAddress) {
-            sql += ' permanentAddress = ?,';
+        if (PermanentAddress) {
+            sql += ' PermanentAddress = ?,';
             values.push(permanentAddress);
         }
 
     
        
         sql = sql.slice(0, -1); 
-        sql += ' WHERE id = ?';
+        sql += ' WHERE EmployeeID = ?';
         values.push(id);
 
     
@@ -191,7 +194,7 @@ router.delete('/delete-profile/:id', auth, async (req, res) => {
   }
 
   try {
-      const sql = `DELETE FROM ${directoryName} WHERE id = ?`;
+      const sql = `DELETE FROM ${directoryName} WHERE EmployeeID = ?`;
       const result = await db.executeQuery(sql, [id]);
 
       if (result.affectedRows > 0) {
@@ -209,11 +212,9 @@ router.delete('/delete-profile/:id', auth, async (req, res) => {
 
 
 
-
-
-router.get('/all-profile/:limit/:offset', auth,async (req, res) => {
+router.get('/all-profile/:limit/:offset',auth,async (req, res) => {
     try{
-        const users = await db.executeQuery(`SELECT id,firstName,middleName,lastName,phone,email FROM ${directoryName} LIMIT ${req.params.limit} OFFSET ${req.params.offset}`);
+        const users = await db.executeQuery(`SELECT EmployeeID,FirstName,MiddleName,LastName,Phone,Email FROM ${directoryName} LIMIT ${req.params.limit} OFFSET ${req.params.offset}`);
         res.status(200).json({users});
     } catch (error) {
         console.error('Error fetching users:', error);

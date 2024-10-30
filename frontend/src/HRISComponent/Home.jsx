@@ -20,7 +20,7 @@ function Home() {
   return (
     <>
       <div id="home-container">
-        <Navigation showBar={{navBarVisible,setNavBarVisible}}/>
+        {/* <Navigation showBar={{navBarVisible,setNavBarVisible}}/> */}
           <Body showBar={{navBarVisible,setNavBarVisible}}/>
       </div>
     </>

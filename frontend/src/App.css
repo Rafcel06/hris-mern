@@ -159,7 +159,8 @@
 #home-container {
   height: 100vh;
   display: grid;
-  grid-template-columns: 240px 1fr;
+  /* grid-template-columns: 240px 1fr; */
+  grid-template-columns:1fr;
   grid-template-rows: 1fr;
   grid-template-areas: "Navigation Body Body"
                        "Navigation Body Body"
@@ -212,6 +213,16 @@
    justify-content: space-between;
    background-color: var(--formBg);
    /* border: 1px solid lime; */
+}
+
+#header-body-contain-sub {
+  height: 50px;
+  display: flex;
+  align-items: center;
+  background-color: var(--formBg);
+  column-gap: 1.5em;
+  background-color: #1976d2;
+  box-shadow: 0px 2px 4px -1px rgba(0, 0, 0, 0.2), 0px 4px 5px 0px rgba(0, 0, 0, 0.14), 0px 1px 10px 0px rgba(0, 0,0);
 }
 
 .header-body-block {
@@ -352,101 +363,12 @@
   color: var(--primaryText);
 }
 
-/* -------------------------------------------------------------------------  Home navigation ----------------------------------------------------------------------------------*/
-
-#navigation-list {
-
-  height: auto;
-  padding: 15px;
-  background-color: var(--NavBarBg);
-  z-index: 555;
-  overflow-y: scroll;
-
-}
-
-#navigation-list::-webkit-scrollbar {
-  display: none; /* for Chrome, Safari, and Opera */
-}
-
-.navigation-path {
-  height: 45px !important;
-  width: 96%;
-  margin: 5px 5px;
-  font-size: 15px;
-  display: flex;
-  justify-content:flex-start;
-  padding: 5px;
-  align-items: center;
-  border-radius: 10px;
-  text-decoration: none;
-  column-gap:0.8em;
-  color: var(--NavTextColor);
-  cursor: pointer;
-  position: relative;
-  left: -.5em;
-  text-transform: capitalize;
-}
-
-
-
-.navigation-paragraph {
-  margin:0;
-  padding: 0;
-}
-
-.navigation-sub-path {
-  height: 40px;
-  width: 100% !important;
-  display: flex;
-  align-items: center;
-  column-gap:1em;
-  margin: 15px 0;
-  border-radius: 10px;
-  text-decoration: none;
-  color: var(--NavTextColor);
-  cursor: pointer;
-  text-transform: capitalize;
-}
-
-#navigation-image {
-  height: 40px;
-  width: 100%;
-}
-
+/* -------------------------------------------------------------------------  Home Sub navigation ----------------------------------------------------------------------------------*/
   
-.css-15v22id-MuiAccordionDetails-root {
-  padding: 0 25px 15px !important;
-}
-
-.css-u7qq7e {
-  padding: 8px 28px 16px !important;
-}
-
-.css-eqpfi5-MuiAccordionSummary-content.Mui-expanded {
-  margin: 0px 0 !important;
-}
-
-.navigation-icons-sub{
-  font-size: 5px;
-}
-
-
-@media screen and (max-width: 620px) {
-  #navigation-list {
-    position: fixed;
-    height: 100vh;
-    transition: all .2s ease-in-out ;
-    width: 220px;
-  }
-
-  .hide {
-    left: -50em !important;
-  }
-
-  .show {
-    left: 0 !important;
-  }
-}
+ .sub-list-navigation {
+  text-decoration: none;
+  color: #fff ;
+ }
 
 /* -------------------------------------------------------------------------  Dashboard Page ----------------------------------------------------------------------------------*/
 
@@ -1133,7 +1055,66 @@
 }
 
 
+   /* Chat AI */
 
 
-
-
+   .chat-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #f0f2f5;
+  }
+  
+  .chat-window {
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    width: 400px;
+    background-color: white;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  .messages {
+    flex: 1;
+    padding: 15px;
+    overflow-y: auto;
+  }
+  
+  .message {
+    margin: 10px 0;
+    padding: 10px;
+    border-radius: 5px;
+    max-width: 80%;
+  }
+  
+  .user {
+    background-color: #e1f5fe;
+    align-self: flex-end;
+  }
+  
+  .input-container {
+    display: flex;
+    border-top: 1px solid #ccc;
+    padding: 10px;
+  }
+  
+  .input-container input {
+    flex: 1;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    outline: none;
+  }
+  
+  .input-container button {
+    background-color:var(--btnColor);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    cursor: pointer;
+  }
+  

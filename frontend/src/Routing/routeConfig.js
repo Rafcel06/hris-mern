@@ -1,7 +1,6 @@
 import React from 'react';
 import { Guard } from '../AuthGuard/Guard';
-import { faGauge, faAddressCard,faUsers,faUserTie, faFile,faFileLines, faCircle   } from "@fortawesome/free-solid-svg-icons";
-
+import { faGauge, faAddressCard, faUsers, faUserTie, faFile, faFileLines, faCircle } from "@fortawesome/free-solid-svg-icons";
 
 const LazyLogin = React.lazy(() => import('../Authenticate/Login'));
 const LazyForgot = React.lazy(() => import('../Authenticate/Forgot'));
@@ -9,16 +8,10 @@ const LazyReset = React.lazy(() => import('../Authenticate/Reset'));
 const LazyNotFound = React.lazy(() => import('../HRISComponent/Notfound'));
 const LazyHome = React.lazy(() => import('../HRISComponent/Home'));
 const LazyDashboard = React.lazy(() => import('../HRISComponent/Dashboard'));
-const LazyMyinfo = React.lazy(() => import('../HRISComponent/Myinfo'));
+const LazyAllPeople = React.lazy(() => import('../HRISComponent/AllPeople'));
 const LazyPeople = React.lazy(() => import('../HRISComponent/People'));
-const LazyHiring = React.lazy(() => import('../HRISComponent/Hiring'));
-const LazyReport = React.lazy(() => import('../HRISComponent/Report'));
-const LazyFiles = React.lazy(() => import('../HRISComponent/Files'));
-const LazyProfile = React.lazy(() => import('../HRISComponent/Profile'));
-const LazyJob = React.lazy(() => import('../HRISComponent/Job'));
 
 
-// Route configuration array
 export const routeConfig = [
   {
     path: '/',
@@ -42,8 +35,8 @@ export const routeConfig = [
     ),
     children: [
       {
-        path: 'dashboard',
-        icons :faGauge,
+        path: '',
+        icons: faGauge,
         index: true,
         element: (
           <Guard>
@@ -52,70 +45,164 @@ export const routeConfig = [
         ),
       },
       {
-        path: 'myinfo',
-        icons : faAddressCard,
-        parentnaviagtion :true,
+        path: 'dashboard',
+        icons: faGauge,
         element: (
           <Guard>
-            <LazyProfile />
+            <LazyDashboard />
           </Guard>
         ),
       },
-
-      {
-        path: 'profile',
-        icons :faCircle,
-        subnaviagtion : true,
-        element: (
-          <Guard>
-            <LazyProfile />
-          </Guard>
-        ),
-      },
-      {
-        path: 'job',
-        icons : faCircle,
-        subnaviagtion : true,
-        element: (
-          <Guard>
-            <LazyJob />
-          </Guard>
-        ),
-      },
-
       {
         path: 'people',
-        icons :faUsers,
+        icons: faUsers,
         element: (
           <Guard>
             <LazyPeople />
           </Guard>
         ),
+        children: [
+          {
+            path: 'all-people', 
+            element: (
+              <Guard>
+                <LazyAllPeople />
+              </Guard>
+            ),
+          },
+          {
+            path: 'org-Chart', 
+            element: (
+              <Guard>
+                <LazyAllPeople />
+              </Guard>
+            ),
+          },
+          {
+            path: 'tracker', 
+            element: (
+              <Guard>
+                <LazyAllPeople />
+              </Guard>
+            ),
+          },
+          {
+            path: 'compliance-hub', 
+            element: (
+              <Guard>
+                <LazyAllPeople />
+              </Guard>
+            ),
+          },
+          {
+            path: 'immagration', 
+            element: (
+              <Guard>
+                <LazyAllPeople />
+              </Guard>
+            ),
+          },
+          {
+            path: 'background-check', 
+            element: (
+              <Guard>
+                <LazyAllPeople />
+              </Guard>
+            ),
+          },
+          {
+            path: 'equipment', 
+            element: (
+              <Guard>
+                <LazyAllPeople />
+              </Guard>
+            ),
+          },
+          {
+            path: 'coworker', 
+            element: (
+              <Guard>
+                <LazyAllPeople />
+              </Guard>
+            ),
+          },
+        ],
       },
       {
-        path: 'hiring',
-        icons :faUserTie,
+        path: 'payroll',
+        icons: faGauge,
         element: (
           <Guard>
-            <LazyHiring />
+            <LazyDashboard />
+          </Guard>
+        ),
+        children : [
+          {
+            path: 'upcoming-payment', 
+            element: (
+              <Guard>
+                <LazyAllPeople />
+              </Guard>
+            ),
+          },
+          {
+            path: 'billing', 
+            element: (
+              <Guard>
+                <LazyAllPeople />
+              </Guard>
+            ),
+          },
+          {
+            path: 'global-payroll', 
+            element: (
+              <Guard>
+                <LazyAllPeople />
+              </Guard>
+            ),
+          },
+          {
+            path: 'tax-document', 
+            element: (
+              <Guard>
+                <LazyAllPeople />
+              </Guard>
+            ),
+          },
+          {
+            path: 'expenses', 
+            element: (
+              <Guard>
+                <LazyAllPeople />
+              </Guard>
+            ),
+          },
+        ]
+      },
+      {
+        path: 'iT',
+        icons: faGauge,
+        element: (
+          <Guard>
+            <LazyDashboard />
           </Guard>
         ),
       },
       {
-        path: 'report',
-        icons :faFile,
+        path: 'analytics',
+        icons: faGauge,
         element: (
           <Guard>
-            <LazyReport />
+            <LazyDashboard />
           </Guard>
         ),
       },
       {
-        path: 'files',
-        icons :faFileLines,
+        path: 'hub',
+        icons: faGauge,
         element: (
           <Guard>
-            <LazyFiles />
+            <LazyDashboard />
           </Guard>
         ),
       },

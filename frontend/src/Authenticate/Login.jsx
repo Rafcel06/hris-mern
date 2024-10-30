@@ -17,8 +17,8 @@ import { useAuth } from '../AuthGuard/Auth';
 import { environtment } from '../Environment/environment';
 import { Button } from '@mui/material';
 import useBackdrop from '../Api/useBackdrop';
-
-
+import DOMPurify from 'dompurify';
+import useQueryHooks from '../Api/useQueryHook'
 
 
 
@@ -31,7 +31,8 @@ function Login() {
   const [eye,setEye] = useState(false)
   const [message,setMessage] = useState()
   const { BackdropComponent, showBackdrop, hideBackdrop } = useBackdrop();
-  
+  const { data, queryLoading, queryError, setError, createProfile, updateProfile, deleteProfile } = useQueryHooks();
+
 
   
 
@@ -50,8 +51,17 @@ function Login() {
   }
 
   const submit = (data) => {
+    
     showBackdrop();
-     axios.post(environtment.api + 'login', data)
+
+     let formData = {
+      Email : DOMPurify.sanitize(data.Email),
+      Password : DOMPurify.sanitize(data.Password)
+     }
+
+    if(formData) {
+
+     axios.post(environtment.api + 'login', formData)
      .then((response) => {
          secureLocalStorage.setItem('authenticate',JSON.stringify(response.data))
          navigate("/Home", {replace:true})   
@@ -62,6 +72,7 @@ function Login() {
          setMessage(err?.response?.data?.message)
          hideBackdrop();
      })
+    }
 
 }
 
@@ -82,7 +93,7 @@ function Login() {
 
              <div className="inputGroup">
                 <span className='icons-contain'><FontAwesomeIcon icon={faCircleUser} className='input-icons'/></span>
-                <input  className='input-fields' type="text" {...register("email", 
+                <input  className='input-fields' type="text" {...register("Email", 
                 {
                   pattern : {
                     value : /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i,
@@ -95,11 +106,11 @@ function Login() {
                 })}/> 
                 <label htmlFor="name" className='input-labels' >Name</label>
             </div>
-            <p className='errors-message'>{errors.email?.message}</p>
+            <p className='errors-message'>{errors.Email?.message}</p>
 
             <div className="inputGroup">
                 <span className='icons-contain'><FontAwesomeIcon icon={faKey} className='input-icons'/></span>
-                <input  className='input-fields' type={type} style={{width:'80%'}} {...register("password", 
+                <input  className='input-fields' type={type} style={{width:'80%'}} {...register("Password", 
                 {
                   required : {
                     value : true,
@@ -109,7 +120,7 @@ function Login() {
                 <label htmlFor="name" className='input-labels'>Password</label>
                 <span className='icons-contain'><FontAwesomeIcon icon={hide} className='input-icons' onClick={() => setEye(!eye)}/></span>
             </div>
-            <p className='errors-message'>{!message ? errors.password?.message : message}</p>
+            <p className='errors-message'>{!message ? errors.Password?.message : message}</p>
 
             <div className='form-navigate'>
                  <div id="remember">

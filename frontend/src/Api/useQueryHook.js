@@ -11,6 +11,7 @@ const useQuery = (url,paginate,offset, openSnackbar) => {
  const fetchData = async () => {
   try {
     // setLoading(true);
+
     const response = await axios.get(url + paginate + "/" + offset,{
       headers : {
        'Authorization' : `Bearer ${JSON.parse(secureLocalStorage.getItem('authenticate')).token}`

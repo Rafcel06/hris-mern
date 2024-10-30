@@ -22,14 +22,16 @@ import useModal from "../Api/useModal";
 import useDialog from "../Api/useDialog";
 import { useForm } from "react-hook-form";
 import { Button,   } from "@mui/material";
-
-
+import DOMPurify from "dompurify";
 import '../App.css'
 import { CALCULATE_TIME_OFF, REQUEST_TIME_OFF } from "../Utils/constant";
 
 
 
+
+
 const Dashboard = () => {
+
 
   const { user, login } = useAuth();
   const form = useForm();
@@ -57,11 +59,8 @@ const Dashboard = () => {
   
   const handleOpen = (data) => {
     openModal();
-
     const active_btn  = document.activeElement
-
     active_btn.id ? setCalculate(true) : setCalculate(false)
-    
     console.log(calculate)
 
   };
@@ -102,8 +101,8 @@ const Dashboard = () => {
   return (
     <div>
       <h2>
-        Login as {user?.firstName + " "}
-        {user?.lastName}
+        Login as {DOMPurify.sanitize(user?.firstName + " " || "")}
+        {DOMPurify.sanitize(user?.lastName || "")}
       
       </h2>
       <div id="dashboard-container">

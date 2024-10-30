@@ -3,7 +3,7 @@ import { Outlet } from 'react-router-dom'
 
 const Myinfo = () => {
   return (
-    <div><Outlet/></div>
+    <div>MyInfo is under development</div>
   )
 }
 

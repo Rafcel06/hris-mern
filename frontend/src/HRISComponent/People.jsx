@@ -8,11 +8,10 @@ import useBackdrop from "../Api/useBackdrop";
 import useModal from "../Api/useModal";
 import useDialog from "../Api/useDialog";
 import  useQueryHooks from '../Api/useQueryHook'
-import axios from "axios";
 import Table from "./Table";
 import secureLocalStorage from "react-secure-storage";
 import { UPDATE_FAILED,UPDATE_SUCCESSFULLY,DELETE_FAILED,DELETE_SUCCESSFULLY,CREATE_FAILED,CREATE_SUCCESSFULLY, SUCCESS, ERROR,DELETE_TITLE,DELETE_DESCRIPTION, EDIT_PROFILE, ADD_USER } from "../Utils/constant";
-
+import DOMPurify from "dompurify";
 
 const People = () => {
 
@@ -37,7 +36,8 @@ const People = () => {
   const { data, queryLoading, queryError, setError, createProfile, updateProfile, deleteProfile } = useQueryHooks(environtment.api + "all-profile/" , paginate, offset,openSnackbar);
   const [users,setUsers] = useState([])
 
- 
+
+
 
 //  useEffect(() => {
 //  axios.get(environtment.api + 'all-profile/'+ paginate + "/" +  offset, {
@@ -59,11 +59,22 @@ const People = () => {
   const submit = (data,e) => {
     // setLoading(true);
     // setOpenSnackbar(false)
+     let formData = {
+      FirstName:DOMPurify.sanitize(data.FirstName),
+      MiddleName: DOMPurify.sanitize(data.MiddleName),
+      LastName:DOMPurify.sanitize(data.LastName),
+      Email:DOMPurify.sanitize(data.Email),
+      Phone:DOMPurify.sanitize(data.Phone),
+      Password:DOMPurify.sanitize(data.Password),
+      ConfirmPassword: DOMPurify.sanitize(data.ConfirmPassword)
+     }
+
+
     showBackdrop(); 
 
-    if (edit) {
+    if (edit && formData) {
       setEdit(true)
-      updateProfile(environtment.api + "update-profile/" + userId.id,data)
+      updateProfile(environtment.api + "update-profile/" + userId.EmployeeID,formData)
        .then((response) => {
         hideBackdrop();
         closeModal();
@@ -94,13 +105,16 @@ const People = () => {
 
     }
 
-    if (data.password !== data.confirmPassword) {
+    if (data.Password !== data.ConfirmPassword) {
       setMatch("Password not match");
       return;
     }
 
 
-      createProfile(environtment.api + "register/", data)
+
+     if(formData) {
+
+      createProfile(environtment.api + "register/", formData)
       .then((response) => {
         hideBackdrop();
         closeModal();
@@ -119,6 +133,7 @@ const People = () => {
       })
       e.preventDefault()
       closeModal();
+    }
   };
 
 
@@ -135,13 +150,13 @@ const People = () => {
     setOpenSnackbar(false)
     if(!openSnackbar) {
     reset({
-      firstName:"",
-      middleName: "",
-      lastName:"",
-      email:"",
-      phone:"",
-      password:"",
-      confirmPassword: ""
+      FirstName:"",
+      MiddleName: "",
+      LastName:"",
+      Email:"",
+      Phone:"",
+      Password:"",
+      ConfirmPassword: ""
     })
     setEdit(false)
     setId('')
@@ -149,11 +164,11 @@ const People = () => {
       setEdit(true);
       setId(data)
       reset({
-        firstName:data.firstName,
-        middleName: data.middleName,
-        lastName: data.lastName,
-        email:data.email,
-        phone: data.phone
+        FirstName:data.FirstName,
+        MiddleName: data.MiddleName,
+        LastName: data.LastName,
+        Email:data.Email,
+        Phone: data.Phone
       })
     }
 
@@ -173,9 +188,9 @@ const People = () => {
     const dialogTitle = DELETE_TITLE;
     const dialogMessage = DELETE_DESCRIPTION;
     const confirmCallback = () => {
-    const id = data.id;
+    const EmployeeID = data.EmployeeID;
 
-    deleteProfile(environtment.api + "delete-profile/" + id)
+    deleteProfile(environtment.api + "delete-profile/" + EmployeeID)
      .then((response) => {
       hideBackdrop();
 
@@ -244,73 +259,73 @@ const People = () => {
           <form >
             <div className="form-group" id="input-column">
               <div className="input-contain">
-                <label htmlFor="firstName">FirstName:</label>
+                <label htmlFor="FirstName">FirstName:</label>
                 <input
                   required=""
                   placeholder="Enter your FirstName"
                   className="form-control"
-                  name="firstName"
+                  name="FirstName"
                   type="text"
-                  {...register("firstName", {
+                  {...register("FirstName", {
                     required: {
                       value: edit? false : true,
                       message: "*FirstName is required",
                     },
                   })}
                 />
-                <p className="errors-message">{edit ?  '' : errors.firstName?.message}</p>
+                <p className="errors-message">{edit ?  '' : errors.FirstName?.message}</p>
               </div>
 
               <div className="input-contain">
-                <label htmlFor="middleName">MiddleName:</label>
+                <label htmlFor="MiddleName">MiddleName:</label>
                 <input
                   required=""
                   placeholder="Enter your MiddleName"
                   className="form-control"
-                  name="middleName"
+                  name="MiddleName"
                   type="text"
-                  {...register("middleName", {
+                  {...register("MiddleName", {
                     required: {
                       value: edit? false : true,
                       message: "*MiddleName is required",
                     },
                   })}
                 />
-                <p className="errors-message">{ edit ?  '' : errors.middleName?.message}</p>
+                <p className="errors-message">{ edit ?  '' : errors.MiddleName?.message}</p>
               </div>
             </div>
             
             <div className="form-group" id="input-column">
               <div className="input-contain">
-                <label htmlFor="lastName">LastName:</label>
+                <label htmlFor="LastName">LastName:</label>
                 <input
                   required=""
                   placeholder="Enter your LastName"
                   className="form-control"
-                  name="lastName"
+                  name="LastName"
                   type="text"
-                  {...register("lastName", {
+                  {...register("LastName", {
                     required: {
                       value: edit? false : true,
                       message: "*LastName is required",
                     },
                   })}
                 />
-                <p className="errors-message">{ edit ?  '' : errors.lastName?.message}</p>
+                <p className="errors-message">{ edit ?  '' : errors.LastName?.message}</p>
               </div>
 
               <div className="input-contain">
-                <label htmlFor="email">E-mail:</label>
+                <label htmlFor="Email">E-mail:</label>
                 <input
                   required=""
                   placeholder="Enter your E-mail"
                   className="form-control"
-                  name="email"
+                  name="Email"
                   type="text"
-                  {...register("email", {
+                  {...register("Email", {
                     pattern: {
                       value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i,
-                      message: "*Input a valid email",
+                      message: "*Input a valid Email",
                     },
                     required: {
                       value: edit? false : true,
@@ -318,37 +333,37 @@ const People = () => {
                     },
                   })}
                 />
-                <p className="errors-message">{ edit ?  '' : errors.email?.message}</p>
+                <p className="errors-message">{ edit ?  '' : errors.Email?.message}</p>
               </div>
             </div>
 
             <div className="form-group">
-              <label htmlFor="phone">Phone:</label>
+              <label htmlFor="Phone">Phone:</label>
               <input
                 required=""
                 placeholder="Enter your Phone"
                 className="form-control"
-                name="phone"
+                name="Phone"
                 type="number"
-                {...register("phone", {
+                {...register("Phone", {
                   required: {
                     value:edit? false : true,
                     message: "*Phone is required",
                   },
                 })}
               />
-              <p className="errors-message">{edit ?  '' : errors.phone?.message}</p>
+              <p className="errors-message">{edit ?  '' : errors.Phone?.message}</p>
             </div>
 
             <div className={edit ? "form-group" + " " + "edit-profile" : "form-group"}>
-              <label htmlFor="password">Password:</label>
+              <label htmlFor="Password">Password:</label>
               <input
                 required=""
                 placeholder="Enter your Password"
                 className="form-control"
-                name="password"
-                type="password"
-                {...register("password", {
+                name="Password"
+                type="Password"
+                {...register("Password", {
                   required: {
                     value:edit? false : true,
                     message: "*Password is required",
@@ -356,17 +371,17 @@ const People = () => {
             
                 })}
               />
-              <p className="errors-message">{errors.password?.message}</p>
+              <p className="errors-message">{errors.Password?.message}</p>
             </div>
             <div className={edit ? "form-group" + " " + "edit-profile" : "form-group"}>
-              <label htmlFor="confirmPassword">Confirm Password:</label>
+              <label htmlFor="ConfirmPassword">Confirm Password:</label>
               <input
                 required=""
                 placeholder="Enter your ConfirmPassword"
                 className="form-control"
-                name="confirmPassword"
-                type="password"
-                {...register("confirmPassword", {
+                name="ConfirmPassword"
+                type="Password"
+                {...register("ConfirmPassword", {
                   required: {
                     value: edit? false : true,
                     message: "*ConfirmPassword is required",
@@ -374,7 +389,7 @@ const People = () => {
                 })}
               />
               <p className="errors-message">
-                {match ? match : errors.confirmPassword?.message}
+                {match ? match : errors.ConfirmPassword?.message}
               </p>
             </div>
           </form>
@@ -384,7 +399,7 @@ const People = () => {
             <Button onClick={handleClose} color="primary">
               Cancel
             </Button>
-            <Button color="primary" onClick={(e) => handleSubmit(submit)}>
+            <Button color="primary" onClick={handleSubmit(submit)}>
               Confirm
             </Button>
           </>
